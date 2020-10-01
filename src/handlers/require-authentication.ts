@@ -1,13 +1,11 @@
-import { NextApiResponse, NextApiRequest } from 'next';
+import { NextApiHandler } from 'next';
 
 import { ISessionStore } from '../session/store';
 
-export interface IApiRoute {
-  (req: NextApiRequest, res: NextApiResponse): Promise<void>;
-}
+export type IApiRoute<T = any> = NextApiHandler<T>;
 
-export default function requireAuthentication(sessionStore: ISessionStore) {
-  return (apiRoute: IApiRoute): IApiRoute => async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
+export default function requireAuthentication<T = any>(sessionStore: ISessionStore) {
+  return (apiRoute: IApiRoute<T>): IApiRoute<T> => async (req, res): Promise<void> => {
     if (!req) {
       throw new Error('Request is not available');
     }
